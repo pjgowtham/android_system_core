@@ -1310,6 +1310,11 @@ bool MetadataBuilder::VerifyExtentsAgainstSourceMetadata(
         const MetadataBuilder& target_metadata, uint32_t target_slot_number,
         const std::vector<std::string>& partitions) {
     for (const auto& base_name : partitions) {
+        if (base_name.ends_with("_dlkm")) {
+            LINFO << "Skipping extent verification for partition: " << base_name;
+            continue;
+        }
+
         // Find the partition in metadata with the slot suffix.
         auto target_partition_name = base_name + SlotSuffixForSlotNumber(target_slot_number);
         const auto target_partition = target_metadata.FindPartition(target_partition_name);
